@@ -1,0 +1,83 @@
+@font-face {
+    font-family: pingfangMed;
+    src: url("../fonts/PingFangMedium.ttf");
+}
+
+@font-face {
+    font-family: pingfangThin;
+    src: url("../fonts/PingFangThin.ttf");
+}
+
+@font-face {
+    font-family: pingfangBold;
+    src: url("../fonts/PingFangBold.ttf");
+}
+
+.container {
+    background-color: #F5F5F5;
+    left: 0;
+    right: 0;
+    margin: auto;
+    position: absolute;
+    background-size: cover;
+}
+
+.topbar {
+    height: 60px;
+    line-height: 60px;
+    background-color: #FFF;
+    vertical-align: middle;
+}
+
+.top-logo {
+    width: 210px;
+    height: 24px;
+    image-rendering: auto;
+    float: left;
+    margin-top: 18px;
+}
+
+.right-top-bar {
+    margin-right: 16px;
+}
+
+.menu-logo {
+    margin-top: 14px;
+    width: 32px;
+    height: 32px;
+    display: inline-block;
+    cursor: pointer;
+}
+
+.left-top-bar {
+    margin-left: 16px;
+    font-size: 0;
+    position: relative;
+    top: 0;
+    bottom: 0;
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+.title {
+    padding-left: 8px;
+    font-size: 20px;
+    font-family: "pingfangMed", serif;
+    font-weight: bold;
+}
+
+html {
+    height: 100%;
+    background-color: #F5F5F5;
+}
+
+/* chrome */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+}
+
+/* 火狐浏览器 */
+input[type="number"] {
+    -moz-appearance: textfield;
+}

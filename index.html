@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>自动评价系统</title>
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/title.css">
+    <link rel="stylesheet" href="css/figma-analyze.css">
+    <link rel="stylesheet" href="css/loading.css">
+    <script src="js/data.js"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <style>
+        .vcs-module {
+            width: 560px;
+            height: 346px;
+            background-color: #FFF;
+            margin-left: 16px;
+            padding: 16px;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .vcs-img-container {
+            margin-top: 8px;
+            height: 90px;
+            position: relative;
+        }
+
+        .vcs-img-container > img {
+            max-width: 100%;
+            max-height: 100%;
+            position: absolute;
+            left: 0;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            margin: auto;
+        }
+
+        .vcs-rule-container {
+            margin-top: 8px;
+            height: 31px;
+            position: relative;
+            margin-bottom: 16px;
+        }
+
+        .vcs-rule-container > img {
+            max-height: 100%;
+            max-width: 100%;
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            margin: auto;
+        }
+
+        .vcs-suggestion-area {
+            margin-top: 8px;
+            color: #8E8F93;
+            font-size: 12px;
+            font-family: pingfangThin, serif;
+            border-radius: 8px;
+            border: 1px solid #C7C8CC;
+            padding: 16px;
+            background-color: #FAFAFA;
+            line-height: 20px;
+        }
+
+        .vcs-suggestion {
+            list-style-type: decimal;
+            list-style-position: inside;
+            text-indent: -15px;
+            padding-left: 15px;
+        }
+
+        .right-top-container {
+            position: relative;
+        }
+
+        .size-select-container {
+            margin: auto 0 auto 30px;
+            color: #48494A;
+            font-size: 12px;
+            height: 22px;
+            line-height: 22px;
+        }
+
+        .size-input-box {
+            padding: 0;
+            margin: 0;
+            height: 21px;
+            width: 21px;
+            border: 1px #D9D9D9 solid;
+            border-radius: 2px;
+            font-size: 12px;
+            text-align: center;
+            font-family: pingfangThin, sans-serif;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="topbar clearfix">
+        <div class="left-top-bar leftfix">
+            <!--<img src="pic/left-logo.png" alt="" class="top-logo">-->
+            <span class="title">自动化评价系统</span>
+        </div>
+        <div class="right-top-bar rightfix">
+            <a href="legalCheck.html"><img src="pic/right-logo1.png" alt="" class="menu-logo"></a>
+            <img src="pic/right-logo3-act.png" alt="" class="menu-logo">
+            <a href="MultiVCS.html"><img src="pic/right-logo4.png" alt="" class="menu-logo"></a>
+            <a href="IconRec.html"><img src="pic/right-logo5.png" alt="" class="menu-logo"></a>
+            <a href="MultiIcon.html"><img src="pic/right-logo6.png" alt="" class="menu-logo"></a>
+        </div>
+    </div>
+    <div class="content clearfix">
+        <div id="loading-container" class="loading-container">
+            <div class="loading"></div>
+            <div id="info-txt" class="loading-info-txt"></div>
+        </div>
+        <div class="warning-container">
+            <img src="pic/info-circle.svg" alt="">
+            <div id="warning-txt" class="warning-txt"></div>
+        </div>
+        <div class="analyze-module leftfix">
+            <div class="map-container">
+                <img id="ui-img" src="pic/pic-back.png" alt="请选择设计文件">
+            </div>
+            <div class="info-tag"><span class="star">*</span> 请输入Figma链接</div>
+            <input id="url-in" type="text" class="figma-input" placeholder="https://www.figma.com/file/">
+            <div class="but-container clearfix">
+                <button id="analyze-but" class="analyze-but rightfix">解析</button>
+            </div>
+            <div class="info-tag"><span class="star">*</span> 请选择Figma画板</div>
+            <div class="frame-select-container">
+                <img src="pic/drop-down-small.png" alt="" class="dropdown-but">
+                <select id="frame-list" name="frame" class="figma-input frame-select">
+                    <option name="frame">--请选择一个Figma画板--</option>
+                </select>
+            </div>
+            <div class="but-container clearfix">
+                <button id="judge-but" class="analyze-but rightfix">开始评价</button>
+                <button id="reset-but" class="analyze-but rightfix reset-but">重置</button>
+            </div>
+        </div>
+        <div class="vcs-module leftfix">
+            <div class="right-top-container clearfix">
+                <div class="info-tag leftfix"><span class="star">*</span> 视觉复杂度（VCS）可视化分析展示</div>
+                <div class="size-select-container leftfix">
+                    颗粒度选择:&nbsp;&nbsp;
+                    <input class="size-input-box size-x" type="number" value="8">
+                    *
+                    <input class="size-input-box size-y" type="number" value="4">
+                </div>
+            </div>
+
+            <div id="heatmap-img" class="vcs-img-container"><img src="pic/pic-back.png" alt=""></div>
+            <div class="vcs-rule-container"><img src="pic/vcs-rule.png" alt=""></div>
+            <div class="info-tag"><span class="star">*</span> 修改意见</div>
+            <div class="vcs-suggestion-area">针对该界面的UI视觉复杂度（VCS）可视化分析结果，给出以下建议：
+                <ol type="1" class="vcs-suggestion">
+                    <li>在复杂度中等区域，建议在保证功能的前提下尽量减少UI组件数量，简化部分图标使其更清晰、明确；</li>
+                    <li>在复杂度较高区域，建议加入部分说明性组件，以帮助用户更好理解界面含义以更好使用功能。</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+<script type="application/javascript">
+    let hasFile = false;
+    let loadArea = $('#loading-container');
+    let warnArea = $('.warning-container');
+    warnArea.click(function () {
+        $('.warning-container').css('display', 'none');
+    })
+
+    function clearMsg() {
+        loadArea.css('display', 'none');
+    }
+
+    function reportMsg(txt) {
+        loadArea.css('display', 'block');
+        $('#info-txt').text(txt);
+    }
+
+    function warnMsg(txt) {
+        warnArea.css('display', 'block');
+        $('#warning-txt').text(txt);
+    }
+
+
+    function resetPic() {
+        $("#ui-img").attr("src", "pic/pic-back.png");
+        $("#heatmap-img > img").attr("src", "pic/pic-back.png");
+        let urlIn = $('#url-in');
+        urlIn.val("");
+        urlIn.removeAttr("disabled");
+        $('#analyze-but').removeAttr("disabled");
+        $('#frame-list').children(':not(:first)').remove();
+    }
+
+    $("#reset-but").click(function () {
+        resetPic();
+        hasFile = false;
+    });
+    $("#analyze-but").click(function () {
+        let urlIn = $('#url-in');
+        let testUrl = urlIn.val();
+        let reg = /^(?:(http|https|ftp):\/\/)?((?:[\w-]+\.)+[a-z0-9]+)((?:\/[^/?#]*)+)?(\?[^#]+)?(#.+)?$/i;
+        if (!reg.test(testUrl) || !testUrl.includes("www.figma.com/file/")) {
+            warnMsg("请输入正确的网址！");
+            return;
+        }
+        $('#analyze-but').attr('disabled', 'disabled');
+        reportMsg('Figma文件解析中，请稍后...');
+        $.ajax({
+            async: true,
+            url: serverUrl + "test/frameList",
+            type: "GET",
+            dataType: "JSON",
+            data: {
+                fileUrl: testUrl
+            },
+            success: function (rep) {
+                hasFile = true;
+                urlIn.attr("disabled", "disabled");
+                $.each(rep, function (index, value) {
+                    $("#frame-list").append($("<option class='frame-item' name='frame'>" + value + "</option>"))
+                });
+                clearMsg();
+            },
+            error: function () {
+                clearMsg();
+                reportMsg("Network error!");
+                $('#analyze-but').attr('disabled', 'disabled');
+            }
+        });
+
+    });
+    $("#judge-but").click(function () {
+        if (!hasFile) {
+            warnMsg("请先解析设计文件！");
+            return;
+        }
+        let frameVal = $('#frame-list option:selected').val();
+        if (frameVal === '--请选择一个Figma画板--') {
+            warnMsg('请先选择一个Figma画板！');
+            return;
+        }
+        let sizeOption = $('.size-x').val()+'*'+$('.size-y').val();
+
+        reportMsg('正在自动评估中，请稍后...');
+        let testUrl = $('#url-in').val();
+        $.ajax({
+            async: true,
+            url: serverUrl + 'test/picture',
+            type: 'GET',
+            dataType: 'JSON',
+            data: {
+                fileUrl: testUrl,
+                frameName: frameVal,
+                vcsSize: sizeOption
+            }, success: function (rep) {
+                $('#ui-img').attr('src', rep.UIImage);
+                $('#heatmap-img > img').attr('src', rep.heatMap);
+                clearMsg();
+            },
+            error: function () {
+                warnMsg('Network error!');
+            }
+        });
+    });
+</script>
+</html>

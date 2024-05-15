@@ -1,0 +1,134 @@
+.content {
+    margin-top: 20px;
+    width: 1000px;
+    left: 0;
+    right: 0;
+
+    margin-left: auto;
+    margin-right: auto;
+    position: relative;
+    background-color: #F5F5F5;
+    /*            background-color: orange;
+                height: 100px;*/
+}
+
+.analyze-module {
+    width: 360px;
+    height: 346px;
+    background-color: #FFF;
+    border-radius: 8px;
+    padding: 16px;
+    overflow: hidden;
+}
+
+
+
+.map-container {
+    height: 124px;
+    background-color: #FAFAFA;
+    border-radius: 8px;
+    border: 2px dashed #C7C8CC;
+    position: relative;
+    line-height: 124px;
+    margin-bottom: 16px;
+}
+
+.map-container > img {
+    max-width: 344px;
+    max-height: 124px;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+}
+
+.info-tag {
+    font-family: pingfangThin, serif;
+    font-size: 14px;
+    color: #48494A;
+    line-height: 22px;
+}
+
+.info-tag .star {
+    color: #D9443C;
+}
+
+.figma-input {
+    height: 32px;
+    border-radius: 2px;
+    border: 1px solid #C7C8CC;
+    padding: 5px 12px;
+    font-size: 14px;
+    font-family: pingfangThin, serif;
+    color: #8E8F93;
+    margin: 4px auto 8px;
+    box-sizing: border-box;
+    width: 100%;
+}
+
+.but-container {
+    margin-bottom: 8px;
+}
+
+.analyze-but {
+    border-radius: 2px;
+    height: 32px;
+    background-color: #6696FF;
+    color: #FFF;
+    font-family: pingfangThin, serif;
+    font-size: 14px;
+    padding: 5px 16px;
+    cursor: pointer;
+}
+
+.frame-select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    position: relative;
+}
+
+.frame-select-container {
+    position: relative;
+}
+
+.dropdown-but {
+    width: 16px;
+    height: 16px;
+    z-index: 3;
+    position: absolute;
+    right: 8px;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+    pointer-events: none;
+}
+
+.analyze-but:hover {
+    background-color: #91B3FC;
+}
+
+.analyze-but:active {
+    background-color: #4B71C2;
+}
+.analyze-but:disabled{
+    background-color: #686868;
+    cursor: default;
+}
+
+.reset-but {
+    background-color: #EBECF0;
+    color: #0D0D0D;
+    margin-right: 8px;
+}
+
+.reset-but:hover {
+    color: #ADAEAE;
+    background-color: #F2F3F4;
+}
+
+.reset-but:active {
+    color: #0D0D0D;
+    background-color: #C4C5CA;
+}

@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>自动评价系统</title>
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/title.css">
+    <link rel="stylesheet" href="css/figma-analyze.css">
+    <link rel="stylesheet" href="css/loading.css">
+    <script src="js/data.js"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdn.staticfile.org/echarts/4.3.0/echarts.min.js"></script>
+    <style>
+        .access-area {
+            background-color: white;
+            width: 360px;
+            border-radius: 8px;
+            padding: 16px;
+            overflow: hidden;
+        }
+
+        .but-container {
+            margin-bottom: 0;
+        }
+
+        .single-icon-module:not(div:first-of-type) {
+            margin-top: 16px;
+        }
+
+        .pic-container {
+            padding: 0;
+            background-color: #999;
+            height: 126px;
+            border-radius: 8px;
+            border: 1px dashed #C7C8CC;
+            line-height: 126px;
+            position: relative;
+            margin-bottom: 16px;
+            text-align: center;
+            cursor: pointer;
+            font-size: 30px;
+            font-family: pingfangBold, sans-serif;
+            color: white;
+        }
+
+
+        .result-area {
+            margin-left: 16px;
+            background-color: white;
+            width: 560px;
+            border-radius: 8px;
+            padding: 16px;
+        }
+
+        .radar-container {
+            height: 328px;
+            margin: 8px 18px auto;
+            position: relative;
+        }
+
+        #radar-container {
+            width: 360px;
+            height: 328px;
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            margin: auto;
+        }
+
+        .icon-score-module:not(div:first-of-type) {
+            margin-top: 16px;
+        }
+
+        .icon-score-container {
+            margin-top: 12px;
+            height: 226px;
+            background-color: #FAFAFA;
+            border-radius: 8px;
+            border: 1px solid #C7C8CC;
+            padding: 16px;
+
+        }
+
+        .icon-score-container > table {
+            font-family: pingfangThin, sans-serif;
+            font-size: 12px;
+            color: #8E8F93;
+            font-weight: lighter;
+            width: 100%;
+            table-layout: fixed;
+            border-collapse: separate;
+            border-spacing: 0 4px;
+        }
+
+        #icon-score-table tr:nth-child(n+2) {
+            background-color: skyblue;
+        }
+
+
+        table, th, td {
+            border: none;
+        }
+
+        .icon-score-container th {
+            width: 25%;
+            height: 24px;
+            line-height: 24px;
+        }
+
+        .icon-score-container th img {
+            width: 24px;
+            height: 24px;
+            display: inline-block;
+            margin-right: 5px;
+            vertical-align: middle;
+        }
+
+        .legend-container {
+            width: 100%;
+        }
+
+        .legend-container > img {
+            width: 100%;
+            height: auto;
+            display: none;
+        }
+
+        .icon-score-module[name="iconA"] table tbody {
+            color: #6696FF;
+        }
+
+        .icon-score-module[name="iconB"] table tbody {
+            color: #70CF97;
+        }
+
+        .icon-score-module[name="iconC"] table tbody {
+            color: #FF6666;
+        }
+    </style>
+</head>
+<body>
+<div id="loading-container" class="loading-container">
+    <div class="loading"></div>
+    <div id="info-txt" class="loading-info-txt"></div>
+</div>
+<div class="warning-container">
+    <img src="pic/info-circle.svg" alt="">
+    <div id="warning-txt" class="warning-txt"></div>
+</div>
+<div class="container">
+    <div class="topbar clearfix">
+        <div class="left-top-bar leftfix">
+            <!--<img src="pic/left-logo.png" alt="" class="top-logo">-->
+            <span class="title">自动化评价系统</span>
+        </div>
+        <div class="right-top-bar rightfix">
+            <a href="legalCheck.html"><img src="pic/right-logo1.png" alt="" class="menu-logo"></a>
+            <a href="index.html"><img src="pic/right-logo3.png" alt="" class="menu-logo"></a>
+            <a href="MultiVCS.html"><img src="pic/right-logo4.png" alt="" class="menu-logo"></a>
+            <a href="IconRec.html"><img src="pic/right-logo5.png" alt="" class="menu-logo"></a>
+            <img src="pic/right-logo6-act.png" alt="" class="menu-logo">
+        </div>
+    </div>
+    <div class="content clearfix">
+        <div class="access-area leftfix">
+            <div class="single-icon-module" name="iconA">
+                <span class="info-tag">iconA：</span>
+                <div class="pic-container">
+                    单击上传图片
+                </div>
+                <div class="but-container clearfix">
+                    <button class="analyze-but rightfix icon-rec-but">开始分析</button>
+                    <button class="analyze-but rightfix reset-but icon-reset-but">重置</button>
+                </div>
+            </div>
+            <div class="single-icon-module" name="iconB">
+                <span class="info-tag">iconB：</span>
+                <div class="pic-container">
+                    单击上传图片
+                </div>
+                <div class="but-container clearfix">
+                    <button class="analyze-but rightfix icon-rec-but">开始分析</button>
+                    <button class="analyze-but rightfix reset-but icon-reset-but">重置</button>
+                </div>
+            </div>
+            <div class="single-icon-module" name="iconC">
+                <span class="info-tag">iconC：</span>
+                <div class="pic-container">
+                    单击上传图片
+                </div>
+                <div class="but-container clearfix">
+                    <button class="analyze-but rightfix icon-rec-but">开始分析</button>
+                    <button class="analyze-but rightfix reset-but icon-reset-but">重置</button>
+                </div>
+            </div>
+        </div>
+        <div class="result-area leftfix">
+            <div class="info-tag"><span class="star">*</span> icon多维语义评分</div>
+            <div class="radar-container">
+                <div id="radar-container"></div>
+
+            </div>
+            <div class="legend-container"><img src="pic/radar-legend.png" alt=""></div>
+            <div class="icon-score-module" name="iconA">
+                <div class="info-tag"><span class="star">*</span> icon A 多维语义评分对比</div>
+                <div class="icon-score-container">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>多维语义</th>
+                            <th>平均分</th>
+                            <th><img src="pic/male-icon.png" alt="">男性用户群体</th>
+                            <th><img src="pic/female-icon.png" alt="">女性用户群体</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="icon-score-module" name="iconB">
+                <div class="info-tag"><span class="star">*</span> icon B 多维语义评分对比</div>
+                <div class="icon-score-container">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>多维语义</th>
+                            <th>平均分</th>
+                            <th><img src="pic/male-icon.png" alt="">男性用户群体</th>
+                            <th><img src="pic/female-icon.png" alt="">女性用户群体</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="icon-score-module" name="iconC">
+                <div class="info-tag"><span class="star">*</span> icon C 多维语义评分对比</div>
+                <div class="icon-score-container">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>多维语义</th>
+                            <th>平均分</th>
+                            <th><img src="pic/male-icon.png" alt="">男性用户群体</th>
+                            <th><img src="pic/female-icon.png" alt="">女性用户群体</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+<script type="application/javascript">
+    let hasFile = false;
+    let loadArea = $('#loading-container');
+    let warnArea = $('.warning-container');
+    warnArea.click(function () {
+        $('.warning-container').css('display', 'none');
+    })
+
+    function clearMsg() {
+        loadArea.css('display', 'none');
+    }
+
+    function reportMsg(txt) {
+        loadArea.css('display', 'block');
+        $('#info-txt').text(txt);
+    }
+
+    function warnMsg(txt) {
+        warnArea.css('display', 'block');
+        $('#warning-txt').text(txt);
+    }
+
+    let iconScores = {};
+    let iconChart = echarts.init(document.getElementById('radar-container'));
+    $(".icon-reset-but").on('click', function (event) {
+        let thisDivDom = $(event.target).parent().parent();
+        let iconName = thisDivDom.attr('name');
+        let actDivDom = $('div.icon-score-module[name="' + iconName + '"]');
+        let $picUploader = thisDivDom.find('div.pic-container');
+        $picUploader.empty();
+        $picUploader.append('单击上传图片');
+        iconChart.dispose();
+        iconChart = echarts.init(document.getElementById('radar-container'));
+        actDivDom.find('table tbody').empty();
+        delete iconScores[iconName];
+        $(".legend-container>img").css("display", "none");
+    });
+
+    function radarGen(data, indicator) {
+        let chartOption = {
+            title: {
+                text: ''
+            },
+            tooltip: {},
+            legend: {
+                data: ['icon1'],
+                left: '1%',
+                top: '1%',
+            },
+            radar: {
+                center: ['50%', '50%'],
+                name: {
+                    textStyle: {
+                        color: '#999999',
+                        borderRadius: 3,
+                        fontStyle: 12,
+                        fontFamily: 'PingFang SC'
+                    }
+                },
+                indicator: indicator
+            },
+            series: [{
+                name: 'iconA',
+                type: 'radar',
+                data: data,
+                label: {
+                    show: true,
+                    position: 'left',
+                    fontSize: 10,
+                    color: '#6696FF',
+                    formatter: function (params) {
+                        return params.value;
+                    }
+                }
+            }
+            ]
+        };
+
+        iconChart.clear();
+        iconChart.setOption(chartOption);
+        $(".legend-container>img").css("display", "inline-block");
+    }
+
+
+    $('.icon-rec-but').on('click', function (event) {
+        let thisDivDom = $(event.target).parent().parent();
+        let iconName = thisDivDom.attr('name');
+        let actDivDom = $('div.icon-score-module[name="' + iconName + '"]');
+        let $picUploader = thisDivDom.find('div.pic-container');
+        let hasImg = $picUploader.find('img').length > 0;
+        if (!hasImg) {
+            warnMsg('请上传图片!');
+            return;
+        }
+        let picSrc = $picUploader.find('img').attr('src');
+        reportMsg('图标分析中，请稍后...');
+        $.ajax({
+            async: true,
+            url: serverUrl + "test/iconAnalyze",
+            type: "POST",
+            dataType: "JSON",
+            data: {
+                fileBase64: picSrc
+            },
+            success: function (rep) {
+                let tabDom = actDivDom.find('table tbody');
+                tabDom.empty();
+                for (let i = 0; i < 6; i++) {
+                    tabDom.append('<tr>')
+                    tabDom.append('<th>' + rep.scoreList[i].name + '</th>')
+                    tabDom.append('<th>' + rep.scoreList[i].score + '</th>')
+                    tabDom.append('<th>' + rep.mScoreList[i] + '</th>')
+                    tabDom.append('<th>' + rep.fScoreList[i] + '</th>')
+                    tabDom.append('</tr>')
+                }
+                iconScores[iconName] = rep.scoreList;
+                clearMsg();
+                reportMsg('对比分析中，请稍后...');
+                $.ajax({
+                    async: true,
+                    url: serverUrl + "test/iconCompare",
+                    type: "POST",
+                    dataType: "JSON",
+                    data: {
+                        scoreMapList: JSON.stringify(iconScores)
+                    },
+                    success: function (rep) {
+                        console.log(rep.data);
+                        console.log(rep.indicator);
+                        radarGen(rep.data, rep.indicator);
+                        clearMsg();
+                    },
+                    error: function () {
+                        clearMsg();
+                        warnMsg('网络错误！请检查网络连接！');
+                    }
+                });
+            },
+            error: function () {
+                clearMsg();
+                warnMsg('网络错误！请检查网络连接或图片是否过大！');
+            }
+        });
+
+    });
+    $('.pic-container').on('click', function (event) {
+        let thisDom = $(event.target);
+        $('<input type="file" accept="image/jpeg, image/png">').change(function (e) {
+            let file = e.target.files[0];
+            let reader = new FileReader();
+
+            reader.onload = function (e) {
+                let img = new Image();
+                img.src = e.target.result;
+
+                img.onload = function () {
+                    let maxWidth = thisDom.width();
+                    let maxHeight = thisDom.height();
+                    let width = img.width;
+                    let height = img.height;
+                    let ratio = Math.min(maxWidth / width, maxHeight / height);
+                    width *= ratio;
+                    height *= ratio;
+                    img.style.width = width + 'px';
+                    img.style.height = height + 'px';
+                    img.style.position = 'absolute';
+                    img.style.top = '50%';
+                    img.style.left = '50%';
+                    img.style.transform = 'translate(-50%, -50%)';
+                    thisDom.empty().append(img);
+                };
+            };
+            reader.readAsDataURL(file);
+        }).click();
+    });
+
+</script>
+</html>

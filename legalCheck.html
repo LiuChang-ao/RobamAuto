@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>自动评价系统</title>
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/title.css">
+    <link rel="stylesheet" href="css/figma-analyze.css">
+    <link rel="stylesheet" href="css/loading.css">
+    <script src="js/data.js"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <style>
+        .check-result-area {
+            width: 560px;
+            height: 204px;
+            background-color: #FFF;
+            margin-left: 16px;
+            padding: 16px;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .result-info {
+            font-family: pingfangThin, serif;
+            color: #8E8F93;
+            font-size: 14px;
+            line-height: 22px;
+            margin: 8px 0;
+        }
+
+        #ok-item-cnt, #fail-item-cnt {
+            display: inline-block;
+            margin: 0 5px;
+            font-size: 20px;
+            line-height: 24px;
+            width: 26px;
+            height: 26px;
+            border-radius: 13px;
+            font-weight: bolder;
+            background-color: #70CF97;
+            color: white;
+            text-align: center;
+        }
+
+        #fail-item-cnt {
+            background-color: #FF764C;
+        }
+
+        .result-detail {
+            height: 97px;
+            padding: 16px;
+            color: #8E8F93;
+            background-color: #FAFAFA;
+            border-radius: 8px;
+            border: 1px solid #C7C8CC;
+            overflow: hidden;
+        }
+
+        .result-detail-line:not(:first-of-type) {
+            margin-top: 8px;
+        }
+
+        .result-detail-line {
+            height: 27px;
+            /*
+            background-color: orange;
+            */
+            font-size: 0;
+            line-height: 27px;
+        }
+
+        .result-detail-line > span {
+            font-family: pingfangThin, serif;
+            font-size: 12px;
+        }
+
+        .result-tag {
+            width: 24px;
+            height: 24px;
+            border-radius: 12px;
+            position: relative;
+        }
+
+        .result-tag > img {
+            width: 16px;
+            height: 16px;
+            position: absolute;
+            top: 0;
+            right: 0;
+            left: 0;
+            bottom: 0;
+            margin: auto;
+        }
+
+        .result-tag-right {
+            background-color: rgba(112, 207, 151, 0.1);
+        }
+
+        .result-tag-false {
+            background-color: rgba(255, 118, 76, 0.1);
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="topbar clearfix">
+        <div class="left-top-bar leftfix">
+            <!--<img src="pic/left-logo.png" alt="" class="top-logo">-->
+            <span class="title">自动化评价系统</span>
+        </div>
+        <div class="right-top-bar rightfix">
+            <img src="pic/right-logo1-act.png" alt="" class="menu-logo">
+            <a href="index.html"><img src="pic/right-logo3.png" alt="" class="menu-logo"></a>
+            <a href="MultiVCS.html"><img src="pic/right-logo4.png" alt="" class="menu-logo"></a>
+            <a href="IconRec.html"><img src="pic/right-logo5.png" alt="" class="menu-logo"></a>
+            <a href="MultiIcon.html"><img src="pic/right-logo6.png" alt="" class="menu-logo"></a>
+        </div>
+    </div>
+    <div class="content clearfix">
+        <div id="loading-container" class="loading-container">
+            <div class="loading"></div>
+            <div id="info-txt" class="loading-info-txt"></div>
+        </div>
+        <div class="warning-container">
+            <img src="pic/info-circle.svg" alt="">
+            <div id="warning-txt" class="warning-txt"></div>
+        </div>
+        <div class="analyze-module leftfix">
+            <div class="map-container">
+                <img id="ui-img" src="pic/pic-back.png" alt="请选择设计文件">
+            </div>
+            <div class="info-tag"><span class="star">*</span> 请输入Figma链接</div>
+            <input id="url-in" type="text" class="figma-input" placeholder="https://www.figma.com/file/">
+            <div class="but-container clearfix">
+                <button id="analyze-but" class="analyze-but rightfix">解析</button>
+            </div>
+            <div class="info-tag"><span class="star">*</span> 请选择Figma画板</div>
+            <div class="frame-select-container">
+                <img src="pic/drop-down-small.png" alt="" class="dropdown-but">
+                <select id="frame-list" name="frame" class="figma-input frame-select">
+                    <option name="frame">--请选择一个Figma画板--</option>
+                </select>
+            </div>
+            <div class="but-container clearfix">
+                <button id="judge-but" class="analyze-but rightfix">开始评价</button>
+                <button id="reset-but" class="analyze-but rightfix reset-but">重置</button>
+            </div>
+        </div>
+        <div class="check-result-area leftfix">
+            <div class="info-tag"><span class="star">*</span> 界面合规性检查结果</div>
+            <p class="result-info">针对您的界面，共进行<span id="total-item-cnt">0</span>项检查，其中<span
+                    id="ok-item-cnt">0</span>项检查符合规范，<span
+                    id="fail-item-cnt">0</span>项检查不符合规范。</p>
+            <div class="result-detail">
+                <div class="result-detail-line clearfix">
+                    <span>尺寸：界面尺寸是否符合规范</span>
+                    <div id="check-size-res" class="result-tag rightfix result-tag-right"></div>
+                </div>
+                <div class="result-detail-line clearfix">
+                    <span>字体：字形、字号是否符合规范</span>
+                    <div id="check-font-res" class="result-tag rightfix result-tag-false"></div>
+                </div>
+                <div class="result-detail-line clearfix">
+                    <span>行距：元素排列是否符合规范</span>
+                    <div id="check-line-res" class="result-tag rightfix result-tag-right"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script type="application/javascript">
+    let hasFile = false;
+    let loadArea = $('#loading-container');
+    let warnArea = $('.warning-container');
+    warnArea.click(function () {
+        $('.warning-container').css('display', 'none');
+    })
+
+    function clearMsg() {
+        loadArea.css('display', 'none');
+    }
+
+    function reportMsg(txt) {
+        loadArea.css('display', 'block');
+        $('#info-txt').text(txt);
+    }
+
+    function warnMsg(txt) {
+        warnArea.css('display', 'block');
+        $('#warning-txt').text(txt);
+    }
+
+
+    function resetPic() {
+        $("#ui-img").attr("src", "pic/pic-back.png");
+        $("#heatmap-img > img").attr("src", "pic/pic-back.png");
+        let urlIn = $('#url-in');
+        urlIn.val("");
+        urlIn.removeAttr("disabled");
+        $('#analyze-but').removeAttr("disabled");
+        $('#frame-list').children(':not(:first)').remove();
+    }
+
+    $("#reset-but").click(function () {
+        resetPic();
+        clearResultTag();
+        hasFile = false;
+    });
+    $("#analyze-but").click(function () {
+        let urlIn = $('#url-in');
+        let testUrl = urlIn.val();
+        let reg = /^(?:(http|https|ftp):\/\/)?((?:[\w-]+\.)+[a-z0-9]+)((?:\/[^/?#]*)+)?(\?[^#]+)?(#.+)?$/i;
+        if (!reg.test(testUrl) || !testUrl.includes("www.figma.com/file/")) {
+            warnMsg("请输入正确的网址！");
+            return;
+        }
+        $('#analyze-but').attr('disabled', 'disabled');
+        reportMsg('Figma文件解析中，请稍后...');
+        $.ajax({
+            async: true,
+            url: serverUrl + "test/frameList",
+            type: "GET",
+            dataType: "JSON",
+            data: {
+                fileUrl: testUrl
+            },
+            success: function (rep) {
+                hasFile = true;
+                urlIn.attr("disabled", "disabled");
+                $.each(rep, function (index, value) {
+                    $("#frame-list").append($("<option class='frame-item' name='frame'>" + value + "</option>"))
+                });
+                clearMsg();
+            },
+            error: function () {
+                reportMsg("Network error!");
+                $('#analyze-but').attr('disabled', 'disabled');
+            }
+        });
+
+    });
+
+    function clearResultTag() {
+        $('.result-tag').children(' img').remove();
+        $('.result-tag').addClass('result-tag-right');
+        $('#total-item-cnt').text(0);
+        $('#ok-item-cnt').text(0);
+        $('#fail-item-cnt').text(0);
+    }
+
+    $("#judge-but").click(function () {
+        if (!hasFile) {
+            warnMsg("请先解析设计文件！");
+            return;
+        }
+        let frameVal = $('#frame-list option:selected').val();
+        if (frameVal === '--请选择一个Figma画板--') {
+            warnMsg('请先选择一个Figma画板！');
+            return;
+        }
+        reportMsg('正在自动评估中，请稍后...');
+        let testUrl = $('#url-in').val();
+        $.ajax({
+            async: true,
+            url: serverUrl + 'test/picture',
+            type: 'GET',
+            dataType: 'JSON',
+            data: {
+                fileUrl: testUrl,
+                frameName: frameVal
+            },
+            success: function (rep) {
+                clearResultTag();
+                $('#ui-img').attr('src', rep.UIImage);
+                $('#total-item-cnt').text(rep.checkCnt);
+                $('#ok-item-cnt').text(rep.okCnt);
+                $('#fail-item-cnt').text(rep.checkCnt - rep.okCnt);
+
+                let resList = rep.checkRes;
+                if (resList[0]) {
+                    $('#check-size-res').append('<img src="pic/right-tag.png" alt="">');
+                } else {
+                    $('#check-size-res').append('<img src="pic/false-tag.png" alt="">');
+                }
+                if (resList[1]) {
+                    $('#check-font-res').append('<img src="pic/right-tag.png" alt="">');
+                } else {
+                    $('#check-font-res').append('<img src="pic/false-tag.png" alt="">');
+                }
+                if (resList[2]) {
+                    $('#check-line-res').append('<img src="pic/right-tag.png" alt="">');
+                } else {
+                    $('#check-line-res').append('<img src="pic/false-tag.png" alt="">');
+                }
+                clearMsg();
+            },
+            error: function () {
+                reportMsg('Network error!');
+            }
+        });
+    });
+</script>
+</html>
